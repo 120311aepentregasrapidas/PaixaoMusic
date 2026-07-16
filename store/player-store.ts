@@ -90,8 +90,10 @@ export const usePlayerStore = create<PlayerState>((set, get) => ({
     }
 
     const nextIndex = isLast ? 0 : queueIndex + 1;
+    const nextSong = queue[nextIndex];
+    if (!nextSong) return;
     set({
-      currentSong: queue[nextIndex],
+      currentSong: nextSong,
       queueIndex: nextIndex,
       progressSeconds: 0,
       isPlaying: true,
@@ -109,8 +111,10 @@ export const usePlayerStore = create<PlayerState>((set, get) => ({
     }
 
     const prevIndex = queueIndex <= 0 ? 0 : queueIndex - 1;
+    const prevSong = queue[prevIndex];
+    if (!prevSong) return;
     set({
-      currentSong: queue[prevIndex],
+      currentSong: prevSong,
       queueIndex: prevIndex,
       progressSeconds: 0,
       isPlaying: true,
@@ -126,7 +130,7 @@ export const usePlayerStore = create<PlayerState>((set, get) => ({
     set((state) => {
       const order: RepeatMode[] = ['off', 'all', 'one'];
       const nextIndex = (order.indexOf(state.repeatMode) + 1) % order.length;
-      return { repeatMode: order[nextIndex] };
+      return { repeatMode: order[nextIndex] ?? 'off' };
     }),
 
   setVolume: (v) => set({ volume: Math.max(0, Math.min(1, v)) }),

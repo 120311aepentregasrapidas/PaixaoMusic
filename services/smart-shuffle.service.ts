@@ -32,7 +32,7 @@ export class SmartShuffleService {
   /** Escolhe a próxima música de um pool (ex.: uma playlist, o álbum, a biblioteca toda) */
   pickNext(pool: Song[]): Song | null {
     if (pool.length === 0) return null;
-    if (pool.length === 1) return pool[0];
+    if (pool.length === 1) return pool[0] ?? null;
 
     const recentSet = new Set(this.recentlyPlayed);
 
@@ -61,6 +61,7 @@ export class SmartShuffleService {
     }
 
     const chosen = candidates[Math.floor(Math.random() * candidates.length)];
+    if (!chosen) return null;
     this.registerPlayed(chosen);
     return chosen;
   }
