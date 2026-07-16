@@ -1,4 +1,5 @@
 import { createServerClient, type CookieOptions } from '@supabase/ssr';
+import { createClient } from '@supabase/supabase-js';
 import { cookies } from 'next/headers';
 import type { Database } from '@/types/supabase';
 
@@ -44,7 +45,6 @@ export function createServerSupabaseClient() {
  * ao cliente. Ignora RLS — use com cautela e sempre validando entrada.
  */
 export function createServiceRoleClient() {
-  const { createClient } = require('@supabase/supabase-js');
   return createClient<Database>(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.SUPABASE_SERVICE_ROLE_KEY!,
