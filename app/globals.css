@@ -1,0 +1,75 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    color-scheme: dark;
+  }
+
+  html {
+    @apply scroll-smooth;
+  }
+
+  body {
+    @apply bg-ink-900 text-parchment-100 antialiased;
+    font-feature-settings: 'cv11', 'ss01';
+  }
+
+  /* Foco de teclado sempre visível — acessibilidade não é opcional */
+  :focus-visible {
+    outline: 2px solid theme('colors.paixao.500');
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+
+  ::selection {
+    background-color: theme('colors.paixao.600');
+    color: theme('colors.parchment.50');
+  }
+
+  /* Scrollbar discreta, condizente com a estética premium */
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    background-color: theme('colors.ink.600');
+    border-radius: 999px;
+    border: 2px solid theme('colors.ink.900');
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}
+
+@layer components {
+  /*
+   * "Sprocket divider" — a assinatura visual do produto: a perfuração de
+   * uma película de filme, reforçando a dualidade vídeo/áudio do sistema.
+   * Usado no lugar de hairlines genéricas entre seções.
+   */
+  .sprocket-divider {
+    @apply relative h-px w-full text-ink-600;
+    background-image: repeating-linear-gradient(
+      90deg,
+      currentColor 0 6px,
+      transparent 6px 18px
+    );
+  }
+
+  .surface-card {
+    @apply rounded-xl bg-ink-800/60 backdrop-blur-sm border border-white/[0.04];
+  }
+}
