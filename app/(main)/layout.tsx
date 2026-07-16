@@ -1,5 +1,6 @@
 import { Sidebar } from '@/components/layout/sidebar';
 import { PlayerBar } from '@/components/player/player-bar';
+import { MediaEngine } from '@/features/player/media-engine';
 
 export default function MainLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -9,6 +10,7 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
         <main className="flex-1 overflow-y-auto">{children}</main>
       </div>
       <PlayerBar />
+      <MediaEngine />
     </div>
   );
 }

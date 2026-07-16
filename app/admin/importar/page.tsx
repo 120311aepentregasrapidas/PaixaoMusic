@@ -1,42 +1,34 @@
 'use client';
 
-import { useState } from 'react';
-import { FolderInput, FileVideo2 } from 'lucide-react';
+import { FolderInput, FileVideo2, CheckCircle2, XCircle, Loader2, SkipForward } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { useImportPipeline } from '@/features/import/use-import-pipeline';
 
-/**
- * Painel de importação em massa.
- *
- * Fluxo (ver features/import para a lógica completa):
- *   1. Usuário seleciona uma pasta local (File System Access API / <input webkitdirectory>)
- *   2. O client varre recursivamente por arquivos .mp4
- *   3. Para cada arquivo: extrai metadados (music-metadata), sobe para o Storage
- *      Provider ativo, resolve/à cria artista+álbum+gênero, grava em `videos`+`songs`
- *   4. Progresso é reportado aqui em tempo real
- *
- * Esta versão é o esqueleto de UI; a orquestração real deve ficar em
- * features/import/use-import-pipeline.ts para manter esta página "burra".
- */
 export default function ImportarPage() {
-  const [selectedFolder, setSelectedFolder] = useState<string | null>(null);
+  const { items, loadFolder, startImport, isRunning, progress } = useImportPipeline();
 
   return (
     <div className="mx-auto max-w-2xl px-6 py-12">
-      <h1 className="font-display text-2xl font-semibold text-parchment-50">
-        Importar coleção
-      </h1>
+      <h1 className="font-display text-2xl font-semibold text-parchment-50">Importar coleção</h1>
       <p className="mt-2 text-sm text-parchment-500">
         Escolha a pasta raiz da sua videoteca (ex.: <code className="font-mono">Músicas/</code>).
-        O sistema varre todas as subpastas, identifica cada MP4 e importa tudo automaticamente.
+        O sistema varre todas as subpastas, identifica cada vídeo e importa automaticamente.
       </p>
+
+      <div className="mt-4 rounded-lg border border-vinil-500/30 bg-vinil-500/5 px-4 py-3 text-xs text-vinil-300">
+        <strong>Aviso:</strong> se este site estiver publicado na Vercel, arquivos de vídeo
+        grandes podem falhar no upload (limite de tamanho da hospedagem). Para importar sua
+        coleção completa, rode o projeto localmente (<code className="font-mono">npm run dev</code>)
+        e use esta mesma tela em <code className="font-mono">localhost:3000</code>.
+      </div>
 
       <label
         htmlFor="folder-input"
-        className="mt-8 flex cursor-pointer flex-col items-center justify-center gap-3 rounded-2xl border border-dashed border-white/15 bg-ink-800/40 px-6 py-14 text-center transition-colors hover:border-paixao-500/60 hover:bg-ink-800/60"
+        className="mt-6 flex cursor-pointer flex-col items-center justify-center gap-3 rounded-2xl border border-dashed border-white/15 bg-ink-800/40 px-6 py-14 text-center transition-colors hover:border-paixao-500/60 hover:bg-ink-800/60"
       >
         <FolderInput className="h-8 w-8 text-paixao-500" />
         <span className="font-medium text-parchment-50">
-          {selectedFolder ?? 'Clique para escolher uma pasta'}
+          {items.length > 0 ? `${items.length} vídeos encontrados` : 'Clique para escolher uma pasta'}
         </span>
         <span className="text-xs text-parchment-500">
           Suporta milhares de arquivos organizados em Artista/Álbum/Música.mp4
@@ -49,11 +41,7 @@ export default function ImportarPage() {
           webkitdirectory=""
           multiple
           onChange={(e) => {
-            const files = e.target.files;
-            if (files && files.length > 0) {
-              const first = files[0] as File & { webkitRelativePath?: string };
-              setSelectedFolder(first.webkitRelativePath?.split('/')[0] ?? 'Pasta selecionada');
-            }
+            if (e.target.files) loadFolder(e.target.files);
           }}
         />
       </label>
@@ -61,14 +49,68 @@ export default function ImportarPage() {
       <div className="mt-6 flex items-center justify-between rounded-lg bg-ink-800/40 px-4 py-3 text-sm text-parchment-500">
         <span className="flex items-center gap-2">
           <FileVideo2 className="h-4 w-4" />
-          Nenhum arquivo processado ainda
+          {progress.errors > 0
+            ? `${progress.errors} com erro`
+            : isRunning
+              ? 'Importando...'
+              : progress.done > 0
+                ? 'Importação concluída'
+                : 'Nenhum arquivo processado ainda'}
         </span>
-        <span className="font-mono text-xs">0 / 0</span>
+        <span className="font-mono text-xs">
+          {progress.done} / {progress.total}
+        </span>
       </div>
 
-      <Button size="lg" className="mt-6 w-full" disabled={!selectedFolder}>
-        Iniciar importação
+      <Button
+        size="lg"
+        className="mt-6 w-full"
+        disabled={items.length === 0 || isRunning}
+        onClick={() => startImport()}
+      >
+        {isRunning ? 'Importando...' : 'Iniciar importação'}
       </Button>
+
+      {items.length > 0 && (
+        <ul className="mt-8 max-h-96 space-y-1 overflow-y-auto">
+          {items.map((item) => (
+            <li
+              key={item.id}
+              className="flex items-center gap-3 rounded-lg px-3 py-2 text-sm text-parchment-300"
+            >
+              <StatusIcon status={item.status} />
+              <div className="min-w-0 flex-1">
+                <p className="truncate">{item.parsedTitle ?? item.file.name}</p>
+                {item.parsedArtist && (
+                  <p className="truncate text-xs text-parchment-500">
+                    {item.parsedArtist}
+                    {item.parsedAlbum ? ` — ${item.parsedAlbum}` : ''}
+                  </p>
+                )}
+                {item.errorMessage && (
+                  <p className="truncate text-xs text-paixao-400">{item.errorMessage}</p>
+                )}
+              </div>
+            </li>
+          ))}
+        </ul>
+      )}
     </div>
   );
+}
+
+function StatusIcon({ status }: { status: string }) {
+  switch (status) {
+    case 'done':
+      return <CheckCircle2 className="h-4 w-4 shrink-0 text-emerald-400" />;
+    case 'error':
+      return <XCircle className="h-4 w-4 shrink-0 text-paixao-500" />;
+    case 'skipped':
+      return <SkipForward className="h-4 w-4 shrink-0 text-parchment-500" />;
+    case 'reading':
+    case 'uploading':
+      return <Loader2 className="h-4 w-4 shrink-0 animate-spin text-vinil-400" />;
+    default:
+      return <FileVideo2 className="h-4 w-4 shrink-0 text-parchment-500" />;
+  }
 }

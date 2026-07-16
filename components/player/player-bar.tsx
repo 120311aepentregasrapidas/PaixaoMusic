@@ -31,6 +31,7 @@ export function PlayerBar() {
     cycleRepeatMode,
     next,
     previous,
+    seekTo,
   } = usePlayerStore();
 
   if (!currentSong) {
@@ -93,7 +94,21 @@ export function PlayerBar() {
 
         <div className="flex w-full max-w-xl items-center gap-2 text-[11px] font-mono text-parchment-500">
           <span>{formatDuration(progressSeconds)}</span>
-          <div className="h-1 flex-1 overflow-hidden rounded-full bg-ink-700">
+          <div
+            className="h-1 flex-1 cursor-pointer overflow-hidden rounded-full bg-ink-700"
+            role="slider"
+            aria-label="Progresso da reprodução"
+            aria-valuemin={0}
+            aria-valuemax={duration}
+            aria-valuenow={progressSeconds}
+            tabIndex={0}
+            onClick={(e) => {
+              if (duration <= 0) return;
+              const rect = e.currentTarget.getBoundingClientRect();
+              const ratio = (e.clientX - rect.left) / rect.width;
+              seekTo(Math.max(0, Math.min(duration, ratio * duration)));
+            }}
+          >
             <div className="h-full bg-paixao-500" style={{ width: `${progressPct}%` }} />
           </div>
           <span>{formatDuration(duration)}</span>

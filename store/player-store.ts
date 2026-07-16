@@ -15,6 +15,8 @@ interface PlayerState {
   repeatMode: RepeatMode;
   volume: number; // 0..1
   progressSeconds: number;
+  /** Referência ao <video> real, registrada pelo MediaEngine — permite seek a partir de qualquer componente */
+  videoElement: HTMLVideoElement | null;
 
   // ações
   playSong: (song: Song, queue?: Song[]) => void;
@@ -27,6 +29,8 @@ interface PlayerState {
   cycleRepeatMode: () => void;
   setVolume: (v: number) => void;
   setProgress: (seconds: number) => void;
+  seekTo: (seconds: number) => void;
+  registerVideoElement: (el: HTMLVideoElement | null) => void;
 }
 
 const shuffleService = new SmartShuffleService();
@@ -41,6 +45,7 @@ export const usePlayerStore = create<PlayerState>((set, get) => ({
   repeatMode: 'off',
   volume: 1,
   progressSeconds: 0,
+  videoElement: null,
 
   playSong: (song, queue) => {
     const nextQueue = queue ?? [song];
@@ -136,4 +141,12 @@ export const usePlayerStore = create<PlayerState>((set, get) => ({
   setVolume: (v) => set({ volume: Math.max(0, Math.min(1, v)) }),
 
   setProgress: (seconds) => set({ progressSeconds: seconds }),
+
+  seekTo: (seconds) => {
+    const { videoElement } = get();
+    if (videoElement) videoElement.currentTime = seconds;
+    set({ progressSeconds: seconds });
+  },
+
+  registerVideoElement: (el) => set({ videoElement: el }),
 }));
