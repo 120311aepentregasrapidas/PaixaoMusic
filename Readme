@@ -1,0 +1,766 @@
+# 🎵 Paixão Music - README de Desenvolvimento
+
+## Objetivo
+
+Desenvolver um aplicativo de streaming multimídia **100% focado em biblioteca pessoal**, inspirado no YouTube Music, Spotify e Plexamp, porém voltado exclusivamente para minha coleção de videoclipes.
+
+O projeto deve ser desenvolvido com arquitetura profissional, escalável e modular, permitindo crescer sem necessidade de reescrita.
+
+Este NÃO é um clone do YouTube Music.
+
+É um sistema proprietário de gerenciamento e reprodução de videoclipes que possui dois modos de reprodução:
+
+* 🎬 Vídeo
+* 🎵 Apenas Áudio
+
+O mesmo arquivo MP4 deve servir para ambos os modos.
+
+---
+
+# Filosofia do Projeto
+
+Todo o sistema deve priorizar:
+
+* Performance
+* Simplicidade de uso
+* Interface moderna
+* Escalabilidade
+* Código limpo
+* Componentização
+* Arquitetura desacoplada
+* Responsividade
+* UX semelhante a aplicativos comerciais
+
+O projeto deve parecer um aplicativo premium.
+
+---
+
+# Tecnologias
+
+## Frontend
+
+* Next.js (App Router)
+* React
+* TypeScript
+* Tailwind CSS
+* shadcn/ui
+* Framer Motion
+* TanStack Query
+* Zustand
+* React Hook Form
+* Zod
+* PWA
+
+---
+
+## Backend
+
+* Supabase
+* PostgreSQL
+* Row Level Security
+* Edge Functions (quando necessário)
+
+---
+
+## Hospedagem
+
+Frontend
+
+* Vercel
+
+Backend
+
+* Supabase
+
+Código
+
+* GitHub
+
+Vídeos
+
+* Inicialmente Archive.org
+* Arquitetura preparada para trocar posteriormente por qualquer outro provedor (Cloudflare R2, Backblaze B2, NAS, servidor próprio, S3 etc.) sem alterar o restante do sistema.
+
+Nunca acoplar o sistema ao Archive.org.
+
+Criar uma camada de Storage Provider.
+
+---
+
+# Objetivo Principal
+
+O usuário possui milhares de videoclipes MP4 organizados em pastas locais.
+
+Exemplo
+
+Músicas/
+
+Rock/
+
+Queen/
+
+Bohemian Rhapsody.mp4
+
+Radio Ga Ga.mp4
+
+Pop/
+
+Michael Jackson/
+
+Thriller.mp4
+
+Beat It.mp4
+
+O sistema deve importar automaticamente toda essa estrutura.
+
+---
+
+# Sistema de Upload
+
+Criar um painel administrativo.
+
+O usuário escolhe uma pasta.
+
+O sistema:
+
+* percorre todas as subpastas
+* identifica todos os MP4
+* lê metadados
+* identifica artista
+* identifica gênero
+* identifica álbum
+* identifica duração
+* identifica resolução
+* identifica bitrate
+* identifica codec
+* faz upload do vídeo
+* grava informações no banco
+
+Tudo automaticamente.
+
+---
+
+# Leitura de Metadados
+
+Extrair automaticamente:
+
+* título
+* artista
+* álbum
+* gênero
+* ano
+* compositor
+* produtor
+* gravadora
+* duração
+* codec
+* resolução
+* fps
+* bitrate
+* tamanho
+* idioma (quando disponível)
+
+Caso exista
+
+cover.jpg
+
+folder.jpg
+
+poster.jpg
+
+usar automaticamente.
+
+---
+
+# Player
+
+Existem apenas dois modos.
+
+## Modo Vídeo
+
+Reproduz normalmente o MP4.
+
+---
+
+## Modo Apenas Áudio
+
+O player continua utilizando o MP4.
+
+Não converter.
+
+Não gerar MP3.
+
+Apenas ocultar o vídeo e reproduzir somente o áudio.
+
+Esse modo deve funcionar:
+
+* tela bloqueada
+* Android
+* iPhone
+* PWA
+* Android Auto
+
+---
+
+# Android Auto
+
+O aplicativo deverá possuir compatibilidade com Android Auto.
+
+Funcionalidades:
+
+* navegar pela biblioteca
+* pesquisar
+* favoritos
+* playlists
+* continuar reprodução
+* shuffle
+* próximo
+* anterior
+
+Quando estiver em movimento:
+
+Somente áudio.
+
+Nunca vídeo.
+
+---
+
+# Smart TV
+
+Ao abrir o aplicativo:
+
+Modo vídeo.
+
+Interface adaptada para controle remoto.
+
+Sem necessidade de mouse.
+
+---
+
+# Android TV
+
+Layout próprio.
+
+Navegação por foco.
+
+---
+
+# Responsividade
+
+Desktop
+
+Tablet
+
+Celular
+
+TV
+
+Ultra Wide
+
+---
+
+# Organização da Biblioteca
+
+A navegação deve existir por:
+
+* Artistas
+* Álbuns
+* Gêneros
+* Décadas
+* Ano
+* País
+* Idioma
+* Favoritos
+* Playlists
+* Recentes
+* Continuar assistindo
+* Histórico
+
+---
+
+# Página do Artista
+
+Foto
+
+Logo
+
+Biografia
+
+Top músicas
+
+Álbuns
+
+Vídeos
+
+Relacionados
+
+---
+
+# Página do Álbum
+
+Capa
+
+Ano
+
+Lista de músicas
+
+Tempo total
+
+Shuffle
+
+Play
+
+---
+
+# Pesquisa
+
+Pesquisar por:
+
+* artista
+* música
+* álbum
+* gênero
+* década
+* idioma
+* país
+* compositor
+
+Pesquisa instantânea.
+
+---
+
+# Shuffle Inteligente
+
+Nunca repetir:
+
+* artista consecutivamente
+* mesma música recentemente
+* mesmo álbum consecutivamente
+
+Criar algoritmo inteligente.
+
+Exemplo
+
+Queen
+
+Michael Jackson
+
+Metallica
+
+ABBA
+
+Queen
+
+Bon Jovi
+
+Nunca:
+
+Queen
+
+Queen
+
+Queen
+
+---
+
+# Rádio Inteligente
+
+Selecionar um artista.
+
+Misturar automaticamente artistas semelhantes.
+
+---
+
+# Histórico
+
+Salvar:
+
+* dispositivo
+* horário
+* progresso
+* duração assistida
+
+---
+
+# Continuar Assistindo
+
+Salvar exatamente o tempo do vídeo.
+
+Exemplo
+
+02:31
+
+Ao abrir novamente:
+
+Continuar de onde parou.
+
+---
+
+# Favoritos
+
+Separados em:
+
+* músicas
+* vídeos
+* artistas
+* álbuns
+
+---
+
+# Playlists
+
+Normais
+
+Automáticas
+
+Exemplo
+
+Mais Tocadas
+
+Rock Anos 80
+
+Recentes
+
+Favoritas
+
+---
+
+# Avaliação
+
+Sistema de 1 a 5 estrelas.
+
+---
+
+# Estatísticas
+
+Mostrar:
+
+Horas reproduzidas
+
+Artistas mais ouvidos
+
+Gêneros
+
+Tempo em vídeo
+
+Tempo em áudio
+
+Top músicas
+
+Top artistas
+
+Top álbuns
+
+---
+
+# Dashboard
+
+Resumo geral.
+
+---
+
+# Cache Inteligente
+
+Pré-carregar próximas músicas.
+
+Evitar pausas entre reproduções.
+
+---
+
+# Gapless Playback
+
+Não existir silêncio entre músicas.
+
+---
+
+# Crossfade
+
+Configuração opcional.
+
+---
+
+# ReplayGain
+
+Normalização de volume.
+
+---
+
+# Equalizador
+
+Perfis:
+
+Rock
+
+Pop
+
+Bass Boost
+
+Flat
+
+Custom
+
+---
+
+# Letras
+
+Preparar arquitetura para suportar:
+
+LRC
+
+Lyrics sincronizadas
+
+Karaokê futuramente.
+
+---
+
+# Multiusuário
+
+Cada usuário possui:
+
+Favoritos
+
+Playlists
+
+Histórico
+
+Avaliações
+
+Configurações
+
+---
+
+# Temas
+
+Claro
+
+Escuro
+
+OLED
+
+Azul
+
+Personalizado
+
+---
+
+# Integração futura
+
+Preparar arquitetura para:
+
+* Chromecast
+* Google Cast
+* DLNA
+* AirPlay
+* Home Assistant
+* API pública
+* Assistente por voz
+
+Mesmo que ainda não sejam implementados.
+
+---
+
+# Banco de Dados
+
+Criar estrutura normalizada.
+
+Tabelas mínimas:
+
+users
+
+artists
+
+albums
+
+genres
+
+songs
+
+videos
+
+favorites
+
+history
+
+playlists
+
+playlist_items
+
+ratings
+
+devices
+
+settings
+
+storage_provider
+
+Nunca utilizar uma tabela única para tudo.
+
+---
+
+# Arquitetura
+
+Utilizar arquitetura modular.
+
+Separar em:
+
+/app
+
+/components
+
+/features
+
+/services
+
+/hooks
+
+/lib
+
+/types
+
+/utils
+
+/providers
+
+/store
+
+Cada módulo deve possuir responsabilidade única.
+
+---
+
+# Qualidade do Código
+
+Utilizar:
+
+SOLID
+
+Clean Code
+
+Repository Pattern
+
+Service Layer
+
+Custom Hooks
+
+Server Components quando fizer sentido
+
+Client Components apenas quando necessário
+
+Lazy Loading
+
+Code Splitting
+
+Memoização
+
+Suspense
+
+Streaming
+
+Evitar código duplicado.
+
+---
+
+# Performance
+
+Meta:
+
+Lighthouse acima de 95.
+
+Carregamento extremamente rápido.
+
+Pré-carregamento de dados.
+
+Virtualização de listas grandes.
+
+---
+
+# Segurança
+
+Autenticação Supabase.
+
+RLS.
+
+Rate Limit.
+
+Sanitização.
+
+Validação com Zod.
+
+Nunca expor chaves privadas.
+
+---
+
+# Interface
+
+Inspirada em:
+
+Spotify
+
+YouTube Music
+
+Plexamp
+
+Netflix
+
+Porém sem copiar nenhum deles.
+
+Criar identidade própria.
+
+Visual moderno.
+
+Animações suaves.
+
+Glassmorphism discreto.
+
+Excelente tipografia.
+
+---
+
+# Experiência do Usuário
+
+Ao abrir o aplicativo:
+
+Continuar ouvindo
+
+Favoritos
+
+Playlists
+
+Artistas
+
+Álbuns
+
+Gêneros
+
+Recentes
+
+Mais Ouvidas
+
+Descobertas
+
+Pesquisar
+
+Tudo extremamente fluido.
+
+---
+
+# Escalabilidade
+
+Projetar pensando em:
+
+10 músicas
+
+100 músicas
+
+1.000 músicas
+
+10.000 músicas
+
+100.000 músicas
+
+A arquitetura deve suportar crescimento sem necessidade de reestruturação.
+
+---
+
+# Objetivo Final
+
+O resultado esperado é um aplicativo com aparência e experiência de produto comercial, capaz de substituir completamente o YouTube Music para uma biblioteca pessoal de videoclipes, funcionando de forma consistente em desktop, dispositivos móveis, Smart TVs e Android Auto, mantendo uma única base de dados, um único backend e uma experiência unificada em todas as plataformas.
