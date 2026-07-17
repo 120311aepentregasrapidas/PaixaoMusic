@@ -3,6 +3,8 @@ import { Fraunces, Manrope, IBM_Plex_Mono } from 'next/font/google';
 import './globals.css';
 import { QueryProvider } from '@/providers/query-provider';
 import { ImportStatusBadge } from '@/components/admin/import-status-badge';
+import { AuthBootstrap } from '@/providers/auth-bootstrap';
+import { ThemeBootstrap } from '@/providers/theme-bootstrap';
 
 const fraunces = Fraunces({
   subsets: ['latin'],
@@ -27,6 +29,13 @@ export const metadata: Metadata = {
   title: 'Paixão Music',
   description: 'Sua biblioteca pessoal de videoclipes — em vídeo ou apenas áudio.',
   manifest: '/manifest.json',
+  icons: {
+    icon: [
+      { url: '/icons/icon-192.png', sizes: '192x192', type: 'image/png' },
+      { url: '/icons/icon-512.png', sizes: '512x512', type: 'image/png' },
+    ],
+    apple: '/icons/icon-192.png',
+  },
 };
 
 export const viewport: Viewport = {
@@ -40,6 +49,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="pt-BR" className={`${fraunces.variable} ${manrope.variable} ${plexMono.variable}`}>
       <body className="font-sans">
         <QueryProvider>
+          <AuthBootstrap />
+          <ThemeBootstrap />
           {children}
           <ImportStatusBadge />
         </QueryProvider>

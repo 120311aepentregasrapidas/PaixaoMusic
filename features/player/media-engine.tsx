@@ -2,6 +2,9 @@
 
 import { useEffect, useRef } from 'react';
 import { usePlayerStore } from '@/store/player-store';
+import { createClient } from '@/lib/supabase/client';
+import { HistoryRepository } from '@/repositories/history.repository';
+import { SongsRepository } from '@/repositories/songs.repository';
 
 /**
  * MediaEngine — o único elemento <video> de todo o app.
@@ -34,6 +37,48 @@ export function MediaEngine() {
     registerVideoElement(videoRef.current);
     return () => registerVideoElement(null);
   }, [registerVideoElement]);
+
+  // Registro de histórico + contagem de reprodução — uma vez por música tocada
+  const historyEntryIdRef = useRef<string | null>(null);
+  useEffect(() => {
+    if (!currentSong) return;
+    let cancelled = false;
+
+    (async () => {
+      const supabase = createClient();
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
+      if (!session || cancelled) return;
+
+      const historyRepo = new HistoryRepository(supabase);
+      const songsRepo = new SongsRepository(supabase);
+
+      const entryId = await historyRepo.createEntry(session.user.id, currentSong.id, playbackMode);
+      if (!cancelled) historyEntryIdRef.current = entryId;
+
+      void songsRepo.incrementPlayCount(currentSong.id);
+    })();
+
+    return () => {
+      cancelled = true;
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentSong?.id]);
+
+  // Atualiza o progresso salvo periodicamente (a cada ~15s de reprodução)
+  useEffect(() => {
+    if (!isPlaying) return;
+    const interval = setInterval(async () => {
+      const entryId = historyEntryIdRef.current;
+      const el = videoRef.current;
+      if (!entryId || !el) return;
+      const supabase = createClient();
+      const historyRepo = new HistoryRepository(supabase);
+      await historyRepo.updateProgress(entryId, el.currentTime, el.currentTime);
+    }, 15000);
+    return () => clearInterval(interval);
+  }, [isPlaying]);
 
   // Troca de música → troca a src e começa a tocar
   useEffect(() => {

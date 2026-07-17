@@ -10,13 +10,14 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        // Fundo — "ink" azulado, não preto puro (evita o cliché near-black + acid accent)
+        // Fundo — controlado por variáveis CSS (ver globals.css) para permitir
+        // troca de tema em tempo real (claro/escuro/OLED/azul) sem recompilar.
         ink: {
-          950: '#0A0C10',
-          900: '#0E1116',
-          800: '#151923',
-          700: '#1D2230',
-          600: '#2A3142',
+          950: 'var(--color-ink-950)',
+          900: 'var(--color-ink-900)',
+          800: 'var(--color-ink-800)',
+          700: 'var(--color-ink-700)',
+          600: 'var(--color-ink-600)',
         },
         // Acento primário — "Paixão crimson"
         paixao: {
@@ -31,12 +32,12 @@ const config: Config = {
           400: '#F0A93B',
           500: '#D6912A',
         },
-        // Texto — branco frio, nunca creme
+        // Texto — também via variável CSS, inverte automaticamente no tema claro
         parchment: {
-          50: '#F4F5F7',
-          100: '#ECEDF1',
-          300: '#B8BCC8',
-          500: '#7C8296',
+          50: 'var(--color-parchment-50)',
+          100: 'var(--color-parchment-100)',
+          300: 'var(--color-parchment-300)',
+          500: 'var(--color-parchment-500)',
         },
       },
       fontFamily: {

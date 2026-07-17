@@ -21,7 +21,7 @@ export function ImportStatusBadge() {
   return (
     <Link
       href="/admin/importar"
-      className="fixed left-4 top-4 z-50 flex items-center gap-3 rounded-full border border-white/10 bg-ink-900/95 px-4 py-2.5 text-sm shadow-2xl backdrop-blur transition-colors hover:bg-ink-800"
+      className="fixed right-4 top-4 z-50 flex items-center gap-3 rounded-full border border-white/10 bg-ink-900/95 px-4 py-2.5 text-sm shadow-2xl backdrop-blur transition-colors hover:bg-ink-800"
     >
       <UploadCloud className="h-4 w-4 animate-pulse-rec text-paixao-500" />
       <span className="text-parchment-100">

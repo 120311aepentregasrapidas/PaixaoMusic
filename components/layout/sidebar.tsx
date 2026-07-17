@@ -9,8 +9,10 @@ import {
   ListMusic,
   Mic2,
   Disc3,
+  BarChart3,
 } from 'lucide-react';
 import { cn } from '@/utils/cn';
+import { ThemeSwitcher } from './theme-switcher';
 
 const primaryLinks = [
   { href: '/', label: 'Início', icon: Home },
@@ -22,21 +24,22 @@ const libraryLinks = [
   { href: '/favoritos', label: 'Favoritos', icon: Heart },
   { href: '/historico', label: 'Histórico', icon: History },
   { href: '/generos', label: 'Gêneros', icon: Disc3 },
+  { href: '/estatisticas', label: 'Estatísticas', icon: BarChart3 },
 ];
 
 export function Sidebar() {
   return (
-    <aside className="hidden lg:flex w-64 shrink-0 flex-col border-r border-white/5 bg-ink-950/60 px-4 py-6">
+    <aside className="hidden lg:flex w-64 shrink-0 flex-col overflow-y-auto border-r border-white/5 bg-ink-950/60 px-4 py-6">
       <Link href="/" className="mb-8 flex items-center gap-3 px-2">
         <Image
-          src="https://raw.githubusercontent.com/120311aepentregasrapidas/PaixaoMusic/refs/heads/main/logopaixaomusic.png"
+          src="/logo.png"
           alt="Paixão Music"
-          width={36}
-          height={36}
-          className="rounded-lg"
-          unoptimized
+          width={56}
+          height={56}
+          className="rounded-xl shadow-lg shadow-paixao-500/10"
+          priority
         />
-        <span className="font-display text-lg font-semibold tracking-tight text-parchment-50">
+        <span className="font-display text-xl font-semibold tracking-tight text-parchment-50">
           Paixão Music
         </span>
       </Link>
@@ -61,13 +64,18 @@ export function Sidebar() {
         <ListMusic className="h-3.5 w-3.5" />
         Suas playlists
       </div>
-      <div className="mt-3 flex flex-col gap-1 overflow-y-auto">
+      <div className="mt-3 flex flex-col gap-1">
         <p className="px-3 py-2 text-sm text-parchment-500">
           Nenhuma playlist ainda. Crie uma na Biblioteca.
         </p>
       </div>
 
-      <div className="mt-auto flex items-center gap-2 rounded-lg px-3 py-3 text-xs text-parchment-500">
+      <div className="mt-auto flex items-center justify-between px-3 py-3">
+        <span className="text-xs text-parchment-500">Tema</span>
+        <ThemeSwitcher />
+      </div>
+
+      <div className="flex items-center gap-2 rounded-lg px-3 py-3 text-xs text-parchment-500">
         <Mic2 className="h-4 w-4 shrink-0" />
         <span>Rádio Inteligente disponível na página de qualquer artista.</span>
       </div>

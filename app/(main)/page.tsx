@@ -5,6 +5,7 @@ import { SongsRepository } from '@/repositories/songs.repository';
 import type { Song } from '@/types/database';
 import { Button } from '@/components/ui/button';
 import { SongCard } from '@/components/library/song-card';
+import { ContinueWatchingRail } from '@/components/library/continue-watching-rail';
 
 async function getHomeData() {
   try {
@@ -37,6 +38,8 @@ export default async function HomePage() {
       </section>
 
       <div className="sprocket-divider my-6" />
+
+      <ContinueWatchingRail />
 
       <Rail title="Mais ouvidas" songs={mostPlayed} />
     </div>
