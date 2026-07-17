@@ -2,10 +2,13 @@
 
 import { FolderInput, FileVideo2, CheckCircle2, XCircle, Loader2, SkipForward } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { useImportPipeline } from '@/features/import/use-import-pipeline';
+import { useImportStore, useImportProgress } from '@/store/import-store';
 
 export default function ImportarPage() {
-  const { items, loadFolder, startImport, isRunning, progress } = useImportPipeline();
+  const items = useImportStore((s) => s.items);
+  const loadFolder = useImportStore((s) => s.loadFolder);
+  const startImport = useImportStore((s) => s.startImport);
+  const progress = useImportProgress();
 
   return (
     <div className="mx-auto max-w-2xl px-6 py-12">
@@ -20,6 +23,12 @@ export default function ImportarPage() {
         grandes podem falhar no upload (limite de tamanho da hospedagem). Para importar sua
         coleção completa, rode o projeto localmente (<code className="font-mono">npm run dev</code>)
         e use esta mesma tela em <code className="font-mono">localhost:3000</code>.
+      </div>
+
+      <div className="mt-3 rounded-lg border border-white/10 bg-ink-800/40 px-4 py-3 text-xs text-parchment-500">
+        Pode navegar para qualquer outra página do site enquanto a importação roda — ela
+        continua em segundo plano. Um indicador de progresso aparece no canto da tela até
+        terminar.
       </div>
 
       <label
@@ -51,7 +60,7 @@ export default function ImportarPage() {
           <FileVideo2 className="h-4 w-4" />
           {progress.errors > 0
             ? `${progress.errors} com erro`
-            : isRunning
+            : progress.isRunning
               ? 'Importando...'
               : progress.done > 0
                 ? 'Importação concluída'
@@ -65,10 +74,10 @@ export default function ImportarPage() {
       <Button
         size="lg"
         className="mt-6 w-full"
-        disabled={items.length === 0 || isRunning}
+        disabled={items.length === 0 || progress.isRunning}
         onClick={() => startImport()}
       >
-        {isRunning ? 'Importando...' : 'Iniciar importação'}
+        {progress.isRunning ? 'Importando...' : 'Iniciar importação'}
       </Button>
 
       {items.length > 0 && (

@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from 'next';
 import { Fraunces, Manrope, IBM_Plex_Mono } from 'next/font/google';
 import './globals.css';
 import { QueryProvider } from '@/providers/query-provider';
+import { ImportStatusBadge } from '@/components/admin/import-status-badge';
 
 const fraunces = Fraunces({
   subsets: ['latin'],
@@ -38,7 +39,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="pt-BR" className={`${fraunces.variable} ${manrope.variable} ${plexMono.variable}`}>
       <body className="font-sans">
-        <QueryProvider>{children}</QueryProvider>
+        <QueryProvider>
+          {children}
+          <ImportStatusBadge />
+        </QueryProvider>
       </body>
     </html>
   );
