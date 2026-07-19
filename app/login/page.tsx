@@ -7,7 +7,7 @@ export default function LoginPage() {
     <div className="flex min-h-screen items-center justify-center bg-ink-950 px-6">
       <div className="w-full max-w-sm">
         <div className="mb-8 flex flex-col items-center gap-3 text-center">
-          <Image src="/logo.png" alt="Paixão Music" width={56} height={56} className="rounded-xl" priority />
+          <Image src="/logo.png" alt="Paixão Music" width={120} height={120} className="rounded-2xl shadow-xl shadow-paixao-500/20" priority />
           <h1 className="font-display text-xl font-semibold text-parchment-50">Acesso administrativo</h1>
           <p className="text-sm text-parchment-500">
             Só quem tiver acesso aqui pode importar e gerenciar a biblioteca.

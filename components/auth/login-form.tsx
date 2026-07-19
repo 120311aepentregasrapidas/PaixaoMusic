@@ -45,6 +45,22 @@ export function LoginForm() {
     const supabase = createClient();
 
     if (mode === 'create') {
+      // Garante que existe uma sessão (mesmo anônima) antes de tentar
+      // convertê-la — se o AuthBootstrap ainda não rodou, ou se o login
+      // anônimo não estiver habilitado no projeto Supabase, criamos aqui.
+      const { data: sessionData } = await supabase.auth.getSession();
+      if (!sessionData.session) {
+        const { error: anonError } = await supabase.auth.signInAnonymously();
+        if (anonError) {
+          setStatus('error');
+          setErrorMessage(
+            'Não foi possível iniciar uma sessão. Confira se "Anonymous Sign-Ins" está ' +
+              'ativado no Supabase (Authentication → Sign In / Providers).',
+          );
+          return;
+        }
+      }
+
       // Converte a sessão anônima atual (dona dos favoritos/histórico já
       // registrados neste dispositivo) em uma conta permanente. O
       // auth.uid() continua o mesmo — nada se perde.

@@ -31,18 +31,15 @@ const libraryLinks = [
 export function Sidebar() {
   return (
     <aside className="hidden lg:flex w-64 shrink-0 flex-col overflow-y-auto border-r border-white/5 bg-ink-950/60 px-4 py-6">
-      <Link href="/" className="mb-8 flex items-center gap-3 px-2">
+      <Link href="/" className="mb-8 flex items-center justify-center px-2">
         <Image
           src="/logo.png"
           alt="Paixão Music"
-          width={56}
-          height={56}
-          className="rounded-xl shadow-lg shadow-paixao-500/10"
+          width={168}
+          height={168}
+          className="h-auto w-full max-w-[168px] rounded-2xl shadow-xl shadow-paixao-500/20"
           priority
         />
-        <span className="font-display text-xl font-semibold tracking-tight text-parchment-50">
-          Paixão Music
-        </span>
       </Link>
 
       <nav className="flex flex-col gap-1">
