@@ -13,6 +13,7 @@ import {
 } from 'lucide-react';
 import { cn } from '@/utils/cn';
 import { ThemeSwitcher } from './theme-switcher';
+import { SidebarPlaylists } from './sidebar-playlists';
 
 const primaryLinks = [
   { href: '/', label: 'Início', icon: Home },
@@ -65,9 +66,7 @@ export function Sidebar() {
         Suas playlists
       </div>
       <div className="mt-3 flex flex-col gap-1">
-        <p className="px-3 py-2 text-sm text-parchment-500">
-          Nenhuma playlist ainda. Crie uma na Biblioteca.
-        </p>
+        <SidebarPlaylists />
       </div>
 
       <div className="mt-auto flex items-center justify-between px-3 py-3">

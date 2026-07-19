@@ -7,6 +7,7 @@ import { formatDuration } from '@/utils/format';
 import { cn } from '@/utils/cn';
 import { FavoriteButton } from './favorite-button';
 import { StarRating } from './star-rating';
+import { AddToPlaylistButton } from './add-to-playlist-button';
 
 export function TrackRow({ song, queue }: { song: Song; queue: Song[] }) {
   const playSong = usePlayerStore((s) => s.playSong);
@@ -60,6 +61,7 @@ export function TrackRow({ song, queue }: { song: Song; queue: Song[] }) {
       </button>
 
       <StarRating songId={song.id} />
+      <AddToPlaylistButton songId={song.id} />
       <FavoriteButton entityType="song" entityId={song.id} size="sm" />
     </div>
   );

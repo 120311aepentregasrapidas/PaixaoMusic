@@ -12,12 +12,15 @@ const config: Config = {
       colors: {
         // Fundo — controlado por variáveis CSS (ver globals.css) para permitir
         // troca de tema em tempo real (claro/escuro/OLED/azul) sem recompilar.
+        // Formato rgb(var(...) / <alpha-value>): é o que permite classes com
+        // opacidade (ex.: bg-ink-800/60) continuarem funcionando com cores
+        // dinâmicas — variáveis CSS puras (ex.: var(--x)) NÃO suportam o "/60".
         ink: {
-          950: 'var(--color-ink-950)',
-          900: 'var(--color-ink-900)',
-          800: 'var(--color-ink-800)',
-          700: 'var(--color-ink-700)',
-          600: 'var(--color-ink-600)',
+          950: 'rgb(var(--color-ink-950) / <alpha-value>)',
+          900: 'rgb(var(--color-ink-900) / <alpha-value>)',
+          800: 'rgb(var(--color-ink-800) / <alpha-value>)',
+          700: 'rgb(var(--color-ink-700) / <alpha-value>)',
+          600: 'rgb(var(--color-ink-600) / <alpha-value>)',
         },
         // Acento primário — "Paixão crimson"
         paixao: {
@@ -34,10 +37,10 @@ const config: Config = {
         },
         // Texto — também via variável CSS, inverte automaticamente no tema claro
         parchment: {
-          50: 'var(--color-parchment-50)',
-          100: 'var(--color-parchment-100)',
-          300: 'var(--color-parchment-300)',
-          500: 'var(--color-parchment-500)',
+          50: 'rgb(var(--color-parchment-50) / <alpha-value>)',
+          100: 'rgb(var(--color-parchment-100) / <alpha-value>)',
+          300: 'rgb(var(--color-parchment-300) / <alpha-value>)',
+          500: 'rgb(var(--color-parchment-500) / <alpha-value>)',
         },
       },
       fontFamily: {

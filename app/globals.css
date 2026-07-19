@@ -6,57 +6,57 @@
   :root,
   [data-theme='dark'] {
     color-scheme: dark;
-    --color-ink-950: #0a0c10;
-    --color-ink-900: #0e1116;
-    --color-ink-800: #151923;
-    --color-ink-700: #1d2230;
-    --color-ink-600: #2a3142;
-    --color-parchment-50: #f4f5f7;
-    --color-parchment-100: #ecedf1;
-    --color-parchment-300: #b8bcc8;
-    --color-parchment-500: #7c8296;
+    --color-ink-950: 10 12 16;
+    --color-ink-900: 14 17 22;
+    --color-ink-800: 21 25 35;
+    --color-ink-700: 29 34 48;
+    --color-ink-600: 42 49 66;
+    --color-parchment-50: 244 245 247;
+    --color-parchment-100: 236 237 241;
+    --color-parchment-300: 184 188 200;
+    --color-parchment-500: 124 130 150;
   }
 
   /* OLED — preto absoluto, economiza bateria em telas OLED e maximiza contraste */
   [data-theme='oled'] {
     color-scheme: dark;
-    --color-ink-950: #000000;
-    --color-ink-900: #000000;
-    --color-ink-800: #0a0a0a;
-    --color-ink-700: #141414;
-    --color-ink-600: #1f1f1f;
-    --color-parchment-50: #f4f5f7;
-    --color-parchment-100: #ecedf1;
-    --color-parchment-300: #b8bcc8;
-    --color-parchment-500: #7c8296;
+    --color-ink-950: 0 0 0;
+    --color-ink-900: 0 0 0;
+    --color-ink-800: 10 10 10;
+    --color-ink-700: 20 20 20;
+    --color-ink-600: 31 31 31;
+    --color-parchment-50: 244 245 247;
+    --color-parchment-100: 236 237 241;
+    --color-parchment-300: 184 188 200;
+    --color-parchment-500: 124 130 150;
   }
 
   /* Azul — mesma estrutura do escuro, só com o "ink" puxado para um azul mais profundo */
   [data-theme='blue'] {
     color-scheme: dark;
-    --color-ink-950: #05070f;
-    --color-ink-900: #0a0f1e;
-    --color-ink-800: #111a30;
-    --color-ink-700: #182548;
-    --color-ink-600: #22345f;
-    --color-parchment-50: #f4f6fb;
-    --color-parchment-100: #e9edf7;
-    --color-parchment-300: #aab4d1;
-    --color-parchment-500: #7783a3;
+    --color-ink-950: 5 7 15;
+    --color-ink-900: 10 15 30;
+    --color-ink-800: 17 26 48;
+    --color-ink-700: 24 37 72;
+    --color-ink-600: 34 52 95;
+    --color-parchment-50: 244 246 251;
+    --color-parchment-100: 233 237 247;
+    --color-parchment-300: 170 180 209;
+    --color-parchment-500: 119 131 163;
   }
 
   /* Claro — inverte fundo/texto; os mesmos componentes funcionam sem alteração */
   [data-theme='light'] {
     color-scheme: light;
-    --color-ink-950: #f4f5f7;
-    --color-ink-900: #ffffff;
-    --color-ink-800: #eef0f3;
-    --color-ink-700: #e2e5eb;
-    --color-ink-600: #cfd3dc;
-    --color-parchment-50: #14161b;
-    --color-parchment-100: #1d2027;
-    --color-parchment-300: #4b5163;
-    --color-parchment-500: #7c8296;
+    --color-ink-950: 244 245 247;
+    --color-ink-900: 255 255 255;
+    --color-ink-800: 238 240 243;
+    --color-ink-700: 226 229 235;
+    --color-ink-600: 207 211 220;
+    --color-parchment-50: 20 22 27;
+    --color-parchment-100: 29 32 39;
+    --color-parchment-300: 75 81 99;
+    --color-parchment-500: 124 130 150;
   }
 
   html {
@@ -77,7 +77,7 @@
 
   ::selection {
     background-color: theme('colors.paixao.600');
-    color: theme('colors.parchment.50');
+    color: rgb(var(--color-parchment-50));
   }
 
   /* Scrollbar discreta, condizente com a estética premium */
@@ -89,9 +89,9 @@
     background: transparent;
   }
   ::-webkit-scrollbar-thumb {
-    background-color: theme('colors.ink.600');
+    background-color: rgb(var(--color-ink-600));
     border-radius: 999px;
-    border: 2px solid theme('colors.ink.900');
+    border: 2px solid rgb(var(--color-ink-900));
   }
 
   @media (prefers-reduced-motion: reduce) {
