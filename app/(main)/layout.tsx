@@ -1,6 +1,7 @@
 import { Sidebar } from '@/components/layout/sidebar';
 import { PlayerBar } from '@/components/player/player-bar';
 import { MediaEngine } from '@/features/player/media-engine';
+import { LyricsPanel } from '@/components/player/lyrics-panel';
 
 export default function MainLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -11,6 +12,7 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
       </div>
       <PlayerBar />
       <MediaEngine />
+      <LyricsPanel />
     </div>
   );
 }

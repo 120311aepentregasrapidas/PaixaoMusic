@@ -12,6 +12,7 @@ import {
   Film,
   Music2,
   Volume2,
+  Mic,
 } from 'lucide-react';
 import { usePlayerStore } from '@/store/player-store';
 import { formatDuration } from '@/utils/format';
@@ -32,6 +33,8 @@ export function PlayerBar() {
     next,
     previous,
     seekTo,
+    showLyrics,
+    toggleLyrics,
   } = usePlayerStore();
 
   if (!currentSong) {
@@ -117,6 +120,18 @@ export function PlayerBar() {
 
       {/* Modo de reprodução + volume */}
       <div className="flex w-64 items-center justify-end gap-3">
+        <button
+          onClick={toggleLyrics}
+          disabled={!currentSong.lyricsLrc}
+          aria-label="Mostrar letras"
+          aria-pressed={showLyrics}
+          className={cn(
+            'flex h-8 w-8 items-center justify-center rounded-full disabled:opacity-30',
+            showLyrics ? 'text-paixao-500' : 'text-parchment-500 hover:text-parchment-100',
+          )}
+        >
+          <Mic className="h-4 w-4" />
+        </button>
         <button
           onClick={togglePlaybackMode}
           className="flex items-center gap-1.5 rounded-full border border-white/10 px-3 py-1.5 text-xs font-medium text-parchment-100 hover:bg-white/5"

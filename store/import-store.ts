@@ -24,6 +24,14 @@ interface ImportState {
 
 const VIDEO_EXTENSIONS = /\.(mp4|mkv|mov|m4v|webm)$/i;
 
+// Uploads rodam em paralelo, mas limitados a um pequeno número simultâneo.
+// Isso acelera bibliotecas grandes sem: (a) saturar a memória do navegador
+// carregando centenas de arquivos de uma vez, nem (b) sobrecarregar a
+// função serverless da Vercel/Archive.org com dezenas de uploads ao mesmo
+// tempo. 3 é um valor conservador — pode ser ajustado conforme a banda
+// disponível.
+const CONCURRENCY = 3;
+
 /**
  * Store global (não um hook local!) de propósito: a importação de centenas
  * de vídeos pode levar bastante tempo. Como este estado vive fora de
@@ -66,7 +74,7 @@ export const useImportStore = create<ImportState>((set, get) => ({
     // Copia a lista no início — evita reprocessar itens adicionados no meio do caminho
     const queue = [...get().items];
 
-    for (const item of queue) {
+    const processOne = async (item: ImportItem) => {
       try {
         updateItem(item.id, { status: 'reading' });
 
@@ -97,12 +105,12 @@ export const useImportStore = create<ImportState>((set, get) => ({
 
         if (!response.ok) {
           updateItem(item.id, { status: 'error', errorMessage: result.error ?? 'Falha na importação.' });
-          continue;
+          return;
         }
 
         if (result.skipped) {
           updateItem(item.id, { status: 'skipped' });
-          continue;
+          return;
         }
 
         updateItem(item.id, { status: 'done' });
@@ -112,7 +120,20 @@ export const useImportStore = create<ImportState>((set, get) => ({
           errorMessage: err instanceof Error ? err.message : 'Erro inesperado.',
         });
       }
-    }
+    };
+
+    // Pool de concorrência simples: N "workers" consomem da mesma fila até
+    // esvaziar. Evita a complexidade de uma lib externa para algo tão direto.
+    let cursor = 0;
+    const worker = async () => {
+      while (cursor < queue.length) {
+        const item = queue[cursor];
+        cursor += 1;
+        if (item) await processOne(item);
+      }
+    };
+
+    await Promise.all(Array.from({ length: Math.min(CONCURRENCY, queue.length) }, worker));
 
     set({ isRunning: false });
   },

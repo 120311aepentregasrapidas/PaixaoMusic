@@ -31,6 +31,8 @@ interface PlayerState {
   setProgress: (seconds: number) => void;
   seekTo: (seconds: number) => void;
   registerVideoElement: (el: HTMLVideoElement | null) => void;
+  showLyrics: boolean;
+  toggleLyrics: () => void;
 }
 
 const shuffleService = new SmartShuffleService();
@@ -46,6 +48,7 @@ export const usePlayerStore = create<PlayerState>((set, get) => ({
   volume: 1,
   progressSeconds: 0,
   videoElement: null,
+  showLyrics: false,
 
   playSong: (song, queue) => {
     const nextQueue = queue ?? [song];
@@ -149,4 +152,6 @@ export const usePlayerStore = create<PlayerState>((set, get) => ({
   },
 
   registerVideoElement: (el) => set({ videoElement: el }),
+
+  toggleLyrics: () => set((state) => ({ showLyrics: !state.showLyrics })),
 }));

@@ -26,6 +26,26 @@ export class ArtistsRepository {
     return (data ?? []).map(mapArtistRow);
   }
 
+  /**
+   * Paginação de verdade (offset/limit), com contagem ESTIMADA — não exata.
+   * Numa tabela com centenas de milhares de artistas, um COUNT(*) exato a
+   * cada troca de página seria lento; a versão estimada usa as estatísticas
+   * internas do Postgres e responde instantaneamente.
+   */
+  async findPage(page: number, pageSize = 48): Promise<{ artists: Artist[]; estimatedTotal: number }> {
+    const from = (page - 1) * pageSize;
+    const to = from + pageSize - 1;
+
+    const { data, error, count } = await this.db
+      .from('artists')
+      .select('*', { count: 'estimated' })
+      .order('name', { ascending: true })
+      .range(from, to);
+
+    if (error) throw error;
+    return { artists: (data ?? []).map(mapArtistRow), estimatedTotal: count ?? 0 };
+  }
+
   async search(query: string, limit = 10): Promise<Artist[]> {
     const { data, error } = await this.db
       .from('artists')

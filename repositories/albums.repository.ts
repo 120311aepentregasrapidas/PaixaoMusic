@@ -15,6 +15,21 @@ export class AlbumsRepository {
     return (data ?? []).map(mapAlbumRow);
   }
 
+  /** Paginação de verdade — ver nota em ArtistsRepository.findPage sobre contagem estimada */
+  async findPage(page: number, pageSize = 48): Promise<{ albums: Album[]; estimatedTotal: number }> {
+    const from = (page - 1) * pageSize;
+    const to = from + pageSize - 1;
+
+    const { data, error, count } = await this.db
+      .from('albums')
+      .select('*, artist:artists(*)', { count: 'estimated' })
+      .order('release_year', { ascending: false })
+      .range(from, to);
+
+    if (error) throw error;
+    return { albums: (data ?? []).map(mapAlbumRow), estimatedTotal: count ?? 0 };
+  }
+
   async search(query: string, limit = 10): Promise<Album[]> {
     const { data, error } = await this.db
       .from('albums')

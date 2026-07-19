@@ -5,6 +5,7 @@ import { QueryProvider } from '@/providers/query-provider';
 import { ImportStatusBadge } from '@/components/admin/import-status-badge';
 import { AuthBootstrap } from '@/providers/auth-bootstrap';
 import { ThemeBootstrap } from '@/providers/theme-bootstrap';
+import { DeviceBootstrap } from '@/providers/device-bootstrap';
 
 const fraunces = Fraunces({
   subsets: ['latin'],
@@ -51,6 +52,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <QueryProvider>
           <AuthBootstrap />
           <ThemeBootstrap />
+          <DeviceBootstrap />
           {children}
           <ImportStatusBadge />
         </QueryProvider>

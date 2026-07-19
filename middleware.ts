@@ -25,7 +25,32 @@ export async function middleware(request: NextRequest) {
   );
 
   // Mantém a sessão renovada em toda navegação — necessário para Server Components.
-  await supabase.auth.getUser();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  // Protege toda a área /admin (exceto a própria tela de login, se um dia
+  // for movida para lá) — só quem tem role owner/admin no profiles passa.
+  // A leitura de `profiles` aqui já respeita RLS (a policy só deixa o
+  // usuário ver o próprio registro), então esta checagem é segura mesmo
+  // rodando com a anon key.
+  if (request.nextUrl.pathname.startsWith('/admin')) {
+    let isAdmin = false;
+
+    if (user) {
+      const { data: profile } = await supabase
+        .from('profiles')
+        .select('role')
+        .eq('id', user.id)
+        .maybeSingle();
+      isAdmin = profile?.role === 'owner' || profile?.role === 'admin';
+    }
+
+    if (!isAdmin) {
+      const loginUrl = new URL('/login', request.url);
+      return NextResponse.redirect(loginUrl);
+    }
+  }
 
   return response;
 }

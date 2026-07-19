@@ -70,6 +70,25 @@ export class SongsRepository {
     const { error } = await this.db.rpc('increment_song_play_count', { song_id: songId });
     if (error) throw error;
   }
+
+  /**
+   * Busca várias músicas por id, preservando a ORDEM da lista `ids` recebida
+   * (o `.in()` do Supabase não garante ordem). Usado pela Rádio Inteligente,
+   * onde a ordem já vem definida pela função SQL `get_radio_queue`.
+   */
+  async findByIds(ids: string[]): Promise<Song[]> {
+    if (ids.length === 0) return [];
+
+    const { data, error } = await this.db
+      .from('songs')
+      .select(`*, artist:artists(*), album:albums(*), video:videos(*)`)
+      .in('id', ids);
+
+    if (error) throw error;
+
+    const byId = new Map((data ?? []).map((row) => [row.id, mapSongRow(row)]));
+    return ids.map((id) => byId.get(id)).filter((s): s is Song => s !== undefined);
+  }
 }
 
 // A "row" vinda do Supabase usa snake_case; convertendo para o domínio (camelCase).

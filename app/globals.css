@@ -104,6 +104,26 @@
       scroll-behavior: auto !important;
     }
   }
+
+  /*
+   * Smart TV: navegação é feita por controle remoto (setas + OK), não por
+   * mouse — o alvo em foco precisa ser óbvio à distância do sofá. Aumenta
+   * o anel de foco e o tamanho dos alvos clicáveis nesse contexto.
+   */
+  [data-tv='true'] :focus-visible {
+    outline: 4px solid theme('colors.paixao.500');
+    outline-offset: 4px;
+    transform: scale(1.04);
+  }
+
+  [data-tv='true'] a,
+  [data-tv='true'] button {
+    min-height: 44px;
+  }
+
+  [data-tv='true'] body {
+    font-size: 1.0625rem;
+  }
 }
 
 @layer components {

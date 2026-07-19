@@ -4,6 +4,7 @@ import { createServerSupabaseClient } from '@/lib/supabase/server';
 import { ArtistsRepository } from '@/repositories/artists.repository';
 import { SongsRepository } from '@/repositories/songs.repository';
 import { PlayAllButton } from '@/components/library/play-all-button';
+import { StartRadioButton } from '@/components/library/start-radio-button';
 import { TrackRow } from '@/components/library/track-row';
 
 export default async function ArtistPage({ params }: { params: { slug: string } }) {
@@ -40,7 +41,10 @@ export default async function ArtistPage({ params }: { params: { slug: string } 
         </div>
       </div>
 
-      <PlayAllButton songs={songs} />
+      <div className="flex flex-wrap items-center">
+        <PlayAllButton songs={songs} />
+        <StartRadioButton artistId={artist.id} />
+      </div>
 
       {albums.length > 0 && (
         <>
